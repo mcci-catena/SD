@@ -336,7 +336,7 @@ namespace SDLib {
 
 
 
-  boolean SDClass::begin(uint8_t csPin) {
+  boolean SDClass::begin(SPIClass &Spi, uint8_t csPin) {
     if (root.isOpen()) {
       root.close();
     }
@@ -348,17 +348,17 @@ namespace SDLib {
       Return true if initialization succeeds, false otherwise.
 
     */
-    return card.init(SPI_HALF_SPEED, csPin) &&
+    return card.init(Spi, SPI_HALF_SPEED, csPin) &&
            volume.init(card) &&
            root.openRoot(volume);
   }
 
-  boolean SDClass::begin(uint32_t clock, uint8_t csPin) {
+  boolean SDClass::begin(SPIClass &Spi, uint32_t clock, uint8_t csPin) {
     if (root.isOpen()) {
       root.close();
     }
 
-    return card.init(SPI_HALF_SPEED, csPin) &&
+    return card.init(Spi, SPI_HALF_SPEED, csPin) &&
            card.setSpiClock(clock) &&
            volume.init(card) &&
            root.openRoot(volume);

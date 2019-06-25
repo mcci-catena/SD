@@ -25,10 +25,10 @@
 #ifdef USE_SPI_LIB
 
   #ifndef SDCARD_SPI
-    #define SDCARD_SPI SPI
+    static SPIClass *s_pSPI;
+    #define SDCARD_SPI (*s_pSPI)
   #endif
 
-  #include <SPI.h>
   static SPISettings settings;
 #endif
 // functions for hardware SPI
@@ -247,6 +247,7 @@ uint8_t Sd2Card::eraseSingleBlockEnable(void) {
 /**
    Initialize an SD flash memory card.
 
+   \param[in] Spi the SPIClass object to use for this socket.
    \param[in] sckRateID SPI clock rate selector. See setSckRate().
    \param[in] chipSelectPin SD chip select pin number.
 
@@ -254,9 +255,11 @@ uint8_t Sd2Card::eraseSingleBlockEnable(void) {
    the value zero, false, is returned for failure.  The reason for failure
    can be determined by calling errorCode() and errorData().
 */
-uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
+uint8_t Sd2Card::init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin) {
   errorCode_ = inBlock_ = partialBlockRead_ = type_ = 0;
   chipSelectPin_ = chipSelectPin;
+  s_pSPI = &Spi;
+
   // 16-bit init start time allows over a minute
   unsigned int t0 = millis();
   uint32_t arg;

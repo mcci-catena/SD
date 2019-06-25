@@ -1,16 +1,20 @@
 = SD Library for Arduino =
 
-image:https://travis-ci.org/arduino-libraries/SD.svg?branch=master[Build Status, link=https://travis-ci.org/arduino-libraries/SD]
+image:https://travis-ci.org/mcci-catena/SD.svg?branch=master[Build Status, link=https://travis-ci.org/mcci-catena/SD]
 
 The SD library allows for reading from and writing to SD cards.
 
 For more information about this library please visit us at
 http://www.arduino.cc/en/Reference/SD
 
+This MCCI-Catena version is modified by MCCI to support SD cards attached on a different SPI bus. The lowest level calls to `card.init()` now requires a `SPIClass *` first parameter. For backward compatibility, all the other calls
+pass `&SPI` (a pointer to the default SPI bus) to the low-level `::init()` method.  Because of this, the driver only supports SPIClass-style interfaces.
+
 == License ==
 
  Copyright (C) 2009 by William Greiman
 Copyright (c) 2010 SparkFun Electronics
+Copyright (c) 2019 MCCI Corporation
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

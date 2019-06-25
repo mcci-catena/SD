@@ -36,6 +36,11 @@ uint8_t const SPI_QUARTER_SPEED = 2;
    run with a standalone driver for AVR.
 */
 #define USE_SPI_LIB
+
+#ifdef USE_SPI_LIB
+# include <SPI.h>
+#endif
+
 /**
    Define MEGA_SOFT_SPI non-zero to use software SPI on Mega Arduinos.
    Pins used are SS 10, MOSI 11, MISO 12, and SCK 13.
@@ -205,7 +210,11 @@ class Sd2Card {
     uint8_t init(uint8_t sckRateID) {
       return init(sckRateID, SD_CHIP_SELECT_PIN);
     }
-    uint8_t init(uint8_t sckRateID, uint8_t chipSelectPin);
+    uint8_t init(uint8_t sckRateID, uint8_t chipSelectPin) {
+      return init(SPI, sckRateID, chipSelectPin);
+    }
+    // full initialization: include SPI reference.
+    uint8_t init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin);
     void partialBlockRead(uint8_t value);
     /** Returns the current value, true or false, for partial block read. */
     uint8_t partialBlockRead(void) const {
@@ -256,6 +265,8 @@ class Sd2Card {
     }
     uint8_t cardCommand(uint8_t cmd, uint32_t arg);
     void error(uint8_t code) {
+      Serial.print("Sd2Card::error: 0x");
+      Serial.println(code, HEX);
       errorCode_ = code;
     }
     uint8_t readRegister(uint8_t cmd, void* buf);

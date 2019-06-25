@@ -19,6 +19,7 @@
 
 #include "utility/SdFat.h"
 #include "utility/SdFatUtil.h"
+#include <SPI.h>
 
 #define FILE_READ O_READ
 #define FILE_WRITE (O_READ | O_WRITE | O_CREAT | O_APPEND)
@@ -67,8 +68,14 @@ namespace SDLib {
     public:
       // This needs to be called to set up the connection to the SD card
       // before other methods are used.
-      boolean begin(uint8_t csPin = SD_CHIP_SELECT_PIN);
-      boolean begin(uint32_t clock, uint8_t csPin);
+      boolean begin(uint8_t csPin = SD_CHIP_SELECT_PIN) {
+        return this->begin(SPI, csPin);
+      }
+      boolean begin(SPIClass &Spi, uint8_t csPin = SD_CHIP_SELECT_PIN);
+      boolean begin(int32_t clock, uint8_t csPin) {
+        return this->begin(SPI, clock, csPin);
+      }
+      boolean begin(SPIClass &Spi, uint32_t clock, uint8_t csPin);
 
       //call this when a card is removed. It will allow you to insert and initialise a new card.
       void end();
