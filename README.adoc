@@ -1,20 +1,21 @@
 = SD Library for Arduino =
 
-image:https://travis-ci.org/mcci-catena/SD.svg?branch=master[Build Status, link=https://travis-ci.org/mcci-catena/SD]
+image:https://travis-ci.com/mcci-catena/SD.svg?branch=master["Build Status", link="https://travis-ci.com/mcci-catena/SD"]
 
 The SD library allows for reading from and writing to SD cards.
 
-For more information about this library please visit us at
-http://www.arduino.cc/en/Reference/SD
+For more information about this library please visit the upstream reference pages at
+http://www.arduino.cc/en/Reference/SD, or find this library on github at https://github.com/mcci-catena/SD.
 
-This MCCI-Catena version is modified by MCCI to support SD cards attached on a different SPI bus. The lowest level calls to `card.init()` now requires a `SPIClass *` first parameter. For backward compatibility, all the other calls
-pass `&SPI` (a pointer to the default SPI bus) to the low-level `::init()` method.  Because of this, the driver only supports SPIClass-style interfaces.
+This MCCI-Catena version is modified by MCCI to support SD cards attached on a different SPI bus (without doing compile-time `#define` magic). A new overload of `card.init()` requires a `SPIClass *` first parameter. For backward compatibility, all the older overloads of `card.init()` pass a default value of `SDCARD_SPI` to the low-level `::init()` method. On most platforms, `SDCARD_SPI` is `SPI`, but some platforms like the Arduino mkrzero override this; for compatibility, the definition of SDCARD_SPI must be hidden in `src/utility/Sd2Card.cpp`.
+
+Although there's lots of code for other approaches, this fork of the driver only supports SPIClass-style interfaces.
 
 == License ==
 
  Copyright (C) 2009 by William Greiman
-Copyright (c) 2010 SparkFun Electronics
-Copyright (c) 2019 MCCI Corporation
+ Copyright (C) 2010 SparkFun Electronics
+ Copyright (C) 2019 MCCI Corporation
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
