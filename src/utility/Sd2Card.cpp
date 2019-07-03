@@ -25,10 +25,10 @@
 #ifdef USE_SPI_LIB
 
   #ifndef SDCARD_SPI
-    static SPIClass *s_pSPI;
-    #define SDCARD_SPI (*s_pSPI)
+    #define SDCARD_SPI SPI
   #endif
 
+  static SPIClass *s_pSPI = &SDCARD_SPI;
   static SPISettings settings;
 #endif
 // functions for hardware SPI
@@ -39,7 +39,7 @@ static void spiSend(uint8_t b) {
   while (!(SPSR & (1 << SPIF)))
     ;
   #else
-  SDCARD_SPI.transfer(b);
+  s_pSPI->transfer(b);
   #endif
 }
 /** Receive a byte from the card */
@@ -48,7 +48,7 @@ static  uint8_t spiRec(void) {
   spiSend(0XFF);
   return SPDR;
   #else
-  return SDCARD_SPI.transfer(0xFF);
+  return s_pSPI->transfer(0xFF);
   #endif
 }
 #else  // SOFTWARE_SPI
@@ -179,7 +179,7 @@ void Sd2Card::chipSelectHigh(void) {
   #ifdef USE_SPI_LIB
   if (chip_select_asserted) {
     chip_select_asserted = 0;
-    SDCARD_SPI.endTransaction();
+    s_pSPI->endTransaction();
   }
   #endif
 }
@@ -188,7 +188,7 @@ void Sd2Card::chipSelectLow(void) {
   #ifdef USE_SPI_LIB
   if (!chip_select_asserted) {
     chip_select_asserted = 1;
-    SDCARD_SPI.beginTransaction(settings);
+    s_pSPI->beginTransaction(settings);
   }
   #endif
   digitalWrite(chipSelectPin_, LOW);
@@ -245,6 +245,21 @@ uint8_t Sd2Card::eraseSingleBlockEnable(void) {
 }
 //------------------------------------------------------------------------------
 /**
+   Initialize an SD flash memory card using default SPI port.
+
+   \param[in] sckRateID SPI clock rate selector. See setSckRate().
+   \param[in] chipSelectPin SD chip select pin number.
+
+   \return The value one, true, is returned for success and
+   the value zero, false, is returned for failure.  The reason for failure
+   can be determined by calling errorCode() and errorData().
+*/
+uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
+  return this->init(SDCARD_SPI, sckRateID, chipSelectPin);
+}
+
+//------------------------------------------------------------------------------
+/**
    Initialize an SD flash memory card.
 
    \param[in] Spi the SPIClass object to use for this socket.
@@ -283,20 +298,20 @@ uint8_t Sd2Card::init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin) {
   // clear double speed
   SPSR &= ~(1 << SPI2X);
   #else // USE_SPI_LIB
-  SDCARD_SPI.begin();
+  s_pSPI->begin();
   settings = SPISettings(250000, MSBFIRST, SPI_MODE0);
   #endif // USE_SPI_LIB
   #endif // SOFTWARE_SPI
 
   // must supply min of 74 clock cycles with CS high.
   #ifdef USE_SPI_LIB
-  SDCARD_SPI.beginTransaction(settings);
+  s_pSPI->beginTransaction(settings);
   #endif
   for (uint8_t i = 0; i < 10; i++) {
     spiSend(0XFF);
   }
   #ifdef USE_SPI_LIB
-  SDCARD_SPI.endTransaction();
+  s_pSPI->endTransaction();
   #endif
 
   chipSelectLow();

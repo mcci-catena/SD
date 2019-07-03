@@ -38,7 +38,7 @@ uint8_t const SPI_QUARTER_SPEED = 2;
 #define USE_SPI_LIB
 
 #ifdef USE_SPI_LIB
-# include <SPI.h>
+ #include <SPI.h>
 #endif
 
 /**
@@ -210,9 +210,8 @@ class Sd2Card {
     uint8_t init(uint8_t sckRateID) {
       return init(sckRateID, SD_CHIP_SELECT_PIN);
     }
-    uint8_t init(uint8_t sckRateID, uint8_t chipSelectPin) {
-      return init(SPI, sckRateID, chipSelectPin);
-    }
+    // legacy init: default SPI, full clock and chip select control.
+    uint8_t init(uint8_t sckRateID, uint8_t chipSelectPin);
     // full initialization: include SPI reference.
     uint8_t init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin);
     void partialBlockRead(uint8_t value);
