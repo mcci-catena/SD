@@ -1,5 +1,7 @@
 = SD Library for Arduino =
 
+image:https://img.shields.io/github/release/mcci-catena/SD.svg["GitHub release", link="https://github.com/mcci-catena/SD/releases/latest"]
+image:https://img.shields.io/github/commits-since/mcci-catena/SD/latest.svg["GitHub commits", link="https://github.com/mcci-catena/SD/compare/v1.3.0..master"]
 image:https://travis-ci.com/mcci-catena/SD.svg?branch=master["Build Status", link="https://travis-ci.com/mcci-catena/SD"]
 
 The SD library allows for reading from and writing to SD cards.
