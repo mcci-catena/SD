@@ -38,7 +38,7 @@ uint8_t const SPI_QUARTER_SPEED = 2;
 #define USE_SPI_LIB
 
 #ifdef USE_SPI_LIB
- #include <SPI.h>
+  #include <SPI.h>
 #endif
 
 /**
