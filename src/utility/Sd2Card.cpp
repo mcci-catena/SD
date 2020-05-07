@@ -380,9 +380,9 @@ fail:
 }
 
 // force the SD card into idle state prior to power down.
-// you must call init() after this, becuase the SD card is
+// you must call init() after this, because the SD card is
 // no longer in any of the ready states. Typically the
-// sequence is forceIdle(); power down; sleep; 
+// sequence is forceIdle(); power down; sleep;
 // power up; init(); do some work.  This might take
 // a long time; we allow up to 10 seconds, but the
 // SD card spec doesn't seem to impose an upper time
@@ -406,8 +406,8 @@ uint8_t Sd2Card::forceIdle(void) {
     }
   }
 
-chipSelectHigh();
-return result;
+  chipSelectHigh();
+  return result;
 }
 
 //------------------------------------------------------------------------------
