@@ -77,8 +77,10 @@ namespace SDLib {
       }
       boolean begin(SPIClass &Spi, uint32_t clock, uint8_t csPin);
 
-      //call this when a card is removed. It will allow you to insert and initialise a new card.
-      void end();
+      // call this when a card is removed. It will allow you to insert and initialise a new card.
+      // returns false if the card timed out on the final CMD0; in that case, you should
+      // consider leaving power on.
+      boolean end();
 
       // Open the specified file/directory with the supplied mode (e.g. read or
       // write, etc). Returns a File object for interacting with the file.

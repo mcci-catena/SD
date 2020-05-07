@@ -365,8 +365,9 @@ namespace SDLib {
   }
 
   //call this when a card is removed. It will allow you to insert and initialise a new card.
-  void SDClass::end() {
+  boolean SDClass::end() {
     root.close();
+    return card.forceIdle();
   }
 
   // this little helper is used to traverse paths

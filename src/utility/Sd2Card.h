@@ -112,7 +112,7 @@ uint8_t const SPI_QUARTER_SPEED = 2;
 /** Protect block zero from write if nonzero */
 #define SD_PROTECT_BLOCK_ZERO 1
 /** init timeout ms */
-unsigned int const SD_INIT_TIMEOUT = 2000;
+unsigned int const SD_INIT_TIMEOUT = 10000;
 /** erase timeout ms */
 unsigned int const SD_ERASE_TIMEOUT = 10000;
 /** read timeout ms */
@@ -214,6 +214,9 @@ class Sd2Card {
     uint8_t init(uint8_t sckRateID, uint8_t chipSelectPin);
     // full initialization: include SPI reference.
     uint8_t init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin);
+    // force idle mode (prior to power down)
+    uint8_t forceIdle(void);
+    // set or clear partialBlockRead flag.
     void partialBlockRead(uint8_t value);
     /** Returns the current value, true or false, for partial block read. */
     uint8_t partialBlockRead(void) const {

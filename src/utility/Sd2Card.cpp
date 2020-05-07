@@ -269,6 +269,8 @@ uint8_t Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
    \return The value one, true, is returned for success and
    the value zero, false, is returned for failure.  The reason for failure
    can be determined by calling errorCode() and errorData().
+
+   THe SD card is left in READY state (per SD Card spec)
 */
 uint8_t Sd2Card::init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin) {
   errorCode_ = inBlock_ = partialBlockRead_ = type_ = 0;
@@ -341,6 +343,7 @@ uint8_t Sd2Card::init(SPIClass &Spi, uint8_t sckRateID, uint8_t chipSelectPin) {
   // initialize card and send host supports SDHC if SD2
   arg = type() == SD_CARD_TYPE_SD2 ? 0X40000000 : 0;
 
+  t0 = millis();
   while ((status_ = cardAcmd(ACMD41, arg)) != R1_READY_STATE) {
     // check for timeout
     unsigned int d = millis() - t0;
@@ -375,6 +378,38 @@ fail:
   chipSelectHigh();
   return false;
 }
+
+// force the SD card into idle state prior to power down.
+// you must call init() after this, becuase the SD card is
+// no longer in any of the ready states. Typically the
+// sequence is forceIdle(); power down; sleep; 
+// power up; init(); do some work.  This might take
+// a long time; we allow up to 10 seconds, but the
+// SD card spec doesn't seem to impose an upper time
+// limit for the card's response.
+uint8_t Sd2Card::forceIdle(void) {
+  uint8_t result;
+
+  this->partialBlockRead(false);
+
+  chipSelectLow();
+
+  // command to go idle in SPI mode
+  auto const t0 = millis();
+
+  result = true;
+  while ((status_ = cardCommand(CMD0, 0)) != R1_IDLE_STATE) {
+    unsigned int d = millis() - t0;
+    if (d > SD_INIT_TIMEOUT) {
+      result = false;
+      break;
+    }
+  }
+
+chipSelectHigh();
+return result;
+}
+
 //------------------------------------------------------------------------------
 /**
    Enable or disable partial block reads.
