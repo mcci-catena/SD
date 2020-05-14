@@ -1,7 +1,7 @@
 = SD Library for Arduino =
 
 image:https://img.shields.io/github/release/mcci-catena/SD.svg["GitHub release", link="https://github.com/mcci-catena/SD/releases/latest"]
-image:https://img.shields.io/github/commits-since/mcci-catena/SD/latest.svg["GitHub commits", link="https://github.com/mcci-catena/SD/compare/v1.3.0..master"]
+image:https://img.shields.io/github/commits-since/mcci-catena/SD/latest.svg["GitHub commits", link="https://github.com/mcci-catena/SD/compare/v1.4.0..master"]
 image:https://travis-ci.com/mcci-catena/SD.svg?branch=master["Build Status", link="https://travis-ci.com/mcci-catena/SD"]
 
 The SD library allows for reading from and writing to SD cards.
@@ -15,11 +15,17 @@ Although there's lots of code for other approaches, this fork of the driver only
 
 IMPORTANT:	This library is licensed under GPL3. Thus, use of this library in your program effectively applies the terms of GPL3 to your entire program, not just this library!
 
+== Release Notes ==
+
+v1.4.0 fixes [#1](https://github.com/mcci-catena/SD/issues/1) for better support of powering down the SD card.
+
+v1.3.0 is the first MCCI release, adding the ability to specify an alternate SPI bus.
+
 == License ==
 
  Copyright (C) 2009 by William Greiman
  Copyright (C) 2010 SparkFun Electronics
- Copyright (C) 2019 MCCI Corporation
+ Copyright (C) 2019-2020 MCCI Corporation
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
